@@ -11,18 +11,71 @@ export default function App() {
     const register = async (e) => {
         e.preventDefault();
         // Write your register code here
+        console.log("event", user)
 
+        const {username, password} = user
 
+        const userDetails = await fetch('http://localhost:4000/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({username: username, password: password})
+        })
+
+        const res = await userDetails.json()
+
+        // console.log("res", res.user.username)
+
+        const registeredUsername = await res.user.username
+
+        setRegisterResponse(`Welcome ${registeredUsername}`)
+
+        // console.log("userdetails" ,userDetails)
+
+        // console.log("registerresponse", registerResponse)
     };
 
     const login = async (e) => {
         e.preventDefault();
         // Write your login code here
+        const {username, password} = user
 
+        const res = await fetch('http://localhost:4000/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({username: username, password: password})
+        })
+
+        // console.log("response", res)
+
+        const token = await res.json()
+
+        setLoginResponse(token)
+
+        localStorage.setItem('password', token)
+
+        console.log("storage", localStorage.getItem('password'))
+
+        // console.log("token?", token)
         
     };
 
+    // QUESTION 1 - The user has logged in and now has a valid bearer token saved in local storage. Which header do we need to put this token into when requesting a protected resource from a server?
+    // ANSWER - Authorization
 
+    // QUESTION 2 - Imagine the below code gets profile information for a user by ID but requires a valid token to access. What would you add to include the token from local storage?
+    // ANSWER - Below 
+
+    // const JWT = localStorage.getItem('password')
+    // fetch('http://localhost:4000/user-profile/1', {
+        //     method: 'GET',
+        //     headers: {
+        //         'Content-Type': 'application/json', 'Authorization': JWT
+        //     }
+        // })
 
 
 
